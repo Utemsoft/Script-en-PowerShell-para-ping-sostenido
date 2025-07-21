@@ -1,0 +1,46 @@
+# Script en PowerShell para ping sostenido con columnas alineadas claramente: FECHA Y HORA, IP, SERVIDOR, ESTADO
+
+$servers = @(
+    @{IP="192.168.0.2"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.3"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.4"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.5"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.6"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.7"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.8"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.10"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.12"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.14"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.16"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.19"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.22"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.33"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.110"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.210"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.221"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.222"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.251"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.240"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.0.244"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.10.76"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.10.118"; Nombre="SIN NOMBRE DEFINIDO"},
+    @{IP="192.168.10.253"; Nombre="SIN NOMBRE DEFINIDO"}
+)
+
+Write-Host "Iniciando ping sostenido a las IPs... Presiona Ctrl+C para detener."
+
+# Encabezado con formato
+"{0,-20} {1,-18} {2,-35} {3}" -f "FECHA Y HORA", "IP", "SERVIDOR", "ESTADO" | Write-Host -ForegroundColor Cyan
+
+while ($true) {
+    foreach ($server in $servers) {
+        $fechaHora = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        $pingResult = Test-Connection -ComputerName $server.IP -Count 1 -Quiet
+        $estado = if ($pingResult) { "En línea" } else { "Fuera de línea" }
+        $color = if ($pingResult) { "Green" } else { "Red" }
+
+        # Imprimir con columnas alineadas
+        "{0,-20} {1,-18} {2,-35} {3}" -f $fechaHora, $server.IP, $server.Nombre, $estado | Write-Host -ForegroundColor $color
+    }
+    Start-Sleep -Seconds 5
+}
